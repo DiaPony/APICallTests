@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Click Example with API Call</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Get Herold Matches</h1>
+    <!-- <input type="text" id="inputField" placeholder="Enter match ID..."> -->
+    <button onclick="processInput()">Get Matches</button>
+    <br>
+    <ul id="ApiResponse">
+    </ul>
+
+    <script>
+        function processInput() {
+            // Get the input field value
+            <!-- var matchId = document.getElementById('inputField').value; -->
+
+            // Define query parameters (e.g., adding "min_players" parameter)
+            var queryParams = {
+                min_rank: 10,
+                max_rank: 15
+                // Add more parameters as needed
+            };
+
+            // Construct the URL with query parameters
+            var url = new URL(`https://api.opendota.com/api/publicMatches`);
+            Object.keys(queryParams).forEach(key => url.searchParams.append(key, queryParams[key]));
+
+            // Make API call
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Do something with the API response data
+                    console.log(data);
+
+                    var internJSONFile = JSON.stringify(data);
+                    var matchWinner = JSON.parse(internJSONFile);
+                    for (let index = 0; index < data.length; index++) {
+                        document.getElementById(`ApiResponse`).innerHTML += `Herold game ${index + 1}: ${JSON.stringify(matchWinner[index].match_id)} <br>` ;                        
+                    }
+                    
+                   
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.error('Error fetching data:', error);
+                    alert('Error fetching data. Please check the console for details.');
+                });
+        }
+    </script>
+</body>
+
+</html>
